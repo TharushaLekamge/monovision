@@ -1,0 +1,53 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: monovision <monovision@localhost>
+Date: Wed, 21 Oct 2026 09:36:26 +0530
+Subject: [PATCH 4/5] Fall back to stock marching_cubes without single_mesh
+
+single_mesh exists only in the authors' scikit-image fork, which has no
+build for current Python. Warn and use the stock function so the default
+fuser still runs. Meshes can differ from the paper's.
+---
+ tools/tsdf.py | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/tools/tsdf.py b/tools/tsdf.py
+index 84bcb43..ab925ee 100644
+--- a/tools/tsdf.py
++++ b/tools/tsdf.py
+@@ -1,4 +1,6 @@
++import inspect
+ import os
++import warnings
+ from typing import Tuple
+ 
+ import numpy as np
+@@ -7,6 +9,9 @@ import torch.nn.functional as TF
+ import trimesh
+ from skimage import measure
+ 
++_MARCHING_CUBES_HAS_SINGLE_MESH = (
++    "single_mesh" in inspect.signature(measure.marching_cubes).parameters)
++
+ 
+ class TSDF:
+ 
+@@ -136,7 +141,7 @@ class TSDF:
+         tsdf = self.tsdf_values.detach().cpu().clone().float()
+         tsdf_np = tsdf.clamp(-1, 1).cpu().numpy()
+ 
+-        if export_single_mesh:
++        if export_single_mesh and _MARCHING_CUBES_HAS_SINGLE_MESH:
+             verts, faces, norms, _ = measure.marching_cubes(
+                                                     tsdf_np, 
+                                                     level=0, 
+@@ -144,6 +149,10 @@ class TSDF:
+                                                     single_mesh = True,
+                                                 )
+         else:
++            if export_single_mesh:
++                warnings.warn("scikit-image has no single_mesh support (it is "
++                    "only in the SimpleRecon authors' fork); using the stock "
++                    "marching_cubes. Meshes can differ from the paper's.")
+             verts, faces, norms, _ = measure.marching_cubes(
+                                                     tsdf_np,
+                                                     level=0, 

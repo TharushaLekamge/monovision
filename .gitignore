@@ -218,3 +218,15 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# Customs
+.setup/
+.agents/
+.claude/
+skills-lock.json
+# MonoVision
+checkpoints/
+datasets/
+weights/
+outputs/

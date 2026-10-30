@@ -1,0 +1,6 @@
+[submodule "third_party/AU-GAN"]
+	path = third_party/AU-GAN
+	url = https://github.com/jgkwak95/AU-GAN
+[submodule "third_party/simplerecon"]
+	path = third_party/simplerecon
+	url = https://github.com/nianticlabs/simplerecon

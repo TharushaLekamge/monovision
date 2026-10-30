@@ -1,0 +1,70 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: monovision <monovision@localhost>
+Date: Wed, 21 Oct 2026 09:36:26 +0530
+Subject: [PATCH 2/5] Load released checkpoints under torch>=2.6 and
+ lightning>=2
+
+- allowlist options.Options for weights_only loading (the checkpoints pickle it)
+- tag the stripped checkpoints with the installed lightning version, since
+  they lack the key lightning>=2 needs for migration
+---
+ experiment_modules/depth_model.py | 32 +++++++++++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+
+diff --git a/experiment_modules/depth_model.py b/experiment_modules/depth_model.py
+index 2b60664..9186793 100644
+--- a/experiment_modules/depth_model.py
++++ b/experiment_modules/depth_model.py
+@@ -1,6 +1,9 @@
++import io
+ import logging
++import os
+ 
+ import pytorch_lightning as pl
++import options
+ import timm
+ import torch
+ import torch.nn.functional as F
+@@ -18,6 +21,12 @@ from utils.visualization_utils import colormap_image
+ 
+ logger = logging.getLogger(__name__)
+ 
++LIGHTNING_VERSION_KEY = "pytorch-lightning_version"
++
++# torch>=2.6 loads checkpoints with weights_only=True; the released checkpoints pickle
++# an options.Options object in their hyper-parameters.
++torch.serialization.add_safe_globals([options.Options])
++
+ class DepthModel(pl.LightningModule):
+     """ Class for SimpleRecon depth estimators.
+ 
+@@ -65,6 +74,29 @@ class DepthModel(pl.LightningModule):
+         for matching.
+ 
+     """
++    @classmethod
++    def load_from_checkpoint(cls, checkpoint_path, *args, **kwargs):
++        """ The released checkpoints are stripped (see weights/strip_checkpoint.py)
++            and lack the lightning version key that lightning>=2 needs for
++            checkpoint migration. Tag them as current (they hold only weights and
++            hparams, so there is nothing to migrate) before delegating. Full
++            training checkpoints already have the key and are passed through. """
++        if not isinstance(checkpoint_path, (str, os.PathLike)):
++            return super().load_from_checkpoint(
++                                    checkpoint_path, *args, **kwargs)
++
++        # mmap, so checking for the key doesn't read the weights into memory.
++        checkpoint = torch.load(checkpoint_path, map_location="cpu", mmap=True)
++        if LIGHTNING_VERSION_KEY in checkpoint:
++            return super().load_from_checkpoint(
++                                    checkpoint_path, *args, **kwargs)
++
++        checkpoint[LIGHTNING_VERSION_KEY] = pl.__version__
++        buffer = io.BytesIO()
++        torch.save(checkpoint, buffer)
++        buffer.seek(0)
++        return super().load_from_checkpoint(buffer, *args, **kwargs)
++
+     def __init__(self, opts):
+         """ Inits a depth model.
+ 

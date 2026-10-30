@@ -1,0 +1,26 @@
+# pt-AUGAN as described in the MonoVision paper §III-B / §III-E.
+# [paper] upsample+conv instead of transposed conv; demodulated convs; 256x256 training.
+# [assumption] where demod applies (all generator convs here), bilinear upsampling,
+#              batch size, epochs: the paper does not state them.
+dataset_dir: datasets/bdd100k
+experiment_name: pt_augan_bdd100k
+epoch: 20
+epoch_step: 10
+batch_size: 8
+load_size: 286
+fine_size: 256
+aspect: 1              # paper: "downsized to 256 x 256"
+ngf: 64
+ndf: 64
+n_d: 2
+n_scale: 2
+lr: 0.0002
+beta1: 0.5
+L1_lambda: 10.0
+conf_lambda: 1.0
+use_lsgan: true
+use_uncertainty: true
+max_size: 50
+upsample: upconv
+up_mode: bilinear
+demod: true

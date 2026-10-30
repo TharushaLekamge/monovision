@@ -1,0 +1,22 @@
+# Original AU-GAN settings (upstream main.py defaults + README BDD100K example).
+dataset_dir: datasets/bdd100k
+experiment_name: augan_bdd100k
+epoch: 20
+epoch_step: 10
+batch_size: 8          # upstream README example; main.py default is 1
+load_size: 286
+fine_size: 256
+aspect: 2              # 256x512
+ngf: 64
+ndf: 64
+n_d: 2
+n_scale: 2
+lr: 0.0002
+beta1: 0.5
+L1_lambda: 10.0
+conf_lambda: 1.0
+use_lsgan: true
+use_uncertainty: true
+max_size: 50
+upsample: deconv
+demod: false

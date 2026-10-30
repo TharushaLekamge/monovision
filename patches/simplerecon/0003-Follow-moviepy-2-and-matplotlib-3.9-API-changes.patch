@@ -1,0 +1,42 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: monovision <monovision@localhost>
+Date: Wed, 21 Oct 2026 09:36:26 +0530
+Subject: [PATCH 3/5] Follow moviepy 2 and matplotlib 3.9+ API changes
+
+- moviepy.editor was removed; ImageSequenceClip is at the top level
+- plt.cm.get_cmap was removed; use plt.get_cmap
+---
+ utils/visualization_utils.py | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/utils/visualization_utils.py b/utils/visualization_utils.py
+index 4fe931b..a867ace 100644
+--- a/utils/visualization_utils.py
++++ b/utils/visualization_utils.py
+@@ -1,7 +1,7 @@
+ import os
+ 
+ import matplotlib.pyplot as plt
+-import moviepy.editor as mpy
++import moviepy as mpy
+ import numpy as np
+ import torch
+ from PIL import Image
+@@ -47,7 +47,7 @@ def colormap_image(
+         vmax = valid_vals.max()
+ 
+     cmap = torch.Tensor(
+-                            plt.cm.get_cmap(colormap)(
++                            plt.get_cmap(colormap)(
+                                                 torch.linspace(0, 1, 256)
+                                             )[:, :3]
+                         ).to(image_1hw.device)
+@@ -76,7 +76,7 @@ def save_viz_video_frames(frame_list, path, fps=30):
+     Saves a video file of numpy RGB frames in frame_list.
+     """
+     clip = mpy.ImageSequenceClip(frame_list, fps=fps)
+-    clip.write_videofile(path, verbose=False, logger=None)
++    clip.write_videofile(path, logger=None)
+ 
+     return
+ 

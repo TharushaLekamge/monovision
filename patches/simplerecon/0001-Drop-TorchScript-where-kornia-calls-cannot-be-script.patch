@@ -1,0 +1,54 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: monovision <monovision@localhost>
+Date: Wed, 21 Oct 2026 09:36:26 +0530
+Subject: [PATCH 1/5] Drop TorchScript where kornia calls cannot be scripted
+
+torch.jit.script fails to compile kornia.filters calls on current torch/kornia.
+pyrdown and NormalGenerator run as plain Python; behaviour is unchanged.
+---
+ utils/generic_utils.py  | 1 -
+ utils/geometry_utils.py | 5 ++---
+ 2 files changed, 2 insertions(+), 4 deletions(-)
+
+diff --git a/utils/generic_utils.py b/utils/generic_utils.py
+index 339ad4a..efbb571 100644
+--- a/utils/generic_utils.py
++++ b/utils/generic_utils.py
+@@ -84,7 +84,6 @@ def normalize_depth(depth_b1hw: torch.Tensor,
+     return torch.cat(depths_norm_11hw, dim=0)
+ 
+ 
+-@torch.jit.script
+ def pyrdown(input_tensor: torch.Tensor, num_scales: int = 4):
+     """ Creates a downscale pyramid for the input tensor. """
+     output = [input_tensor]
+diff --git a/utils/geometry_utils.py b/utils/geometry_utils.py
+index 87116db..687b795 100644
+--- a/utils/geometry_utils.py
++++ b/utils/geometry_utils.py
+@@ -3,7 +3,7 @@ import numpy as np
+ import torch
+ import torch.jit as jit
+ import torch.nn.functional as F
+-from torch import Tensor
++from torch import Tensor, nn
+ 
+ from utils.generic_utils import batched_trace
+ 
+@@ -89,7 +89,7 @@ class Project3D(jit.ScriptModule):
+         return torch.cat([pix_coords_b2N, depth_b1N], dim=1)
+ 
+ 
+-class NormalGenerator(jit.ScriptModule):
++class NormalGenerator(nn.Module):
+     def __init__(self, height: int, width: int, 
+                 smoothing_kernel_size: int=5, smoothing_kernel_std: float=2.0):
+         """ 
+@@ -104,7 +104,6 @@ class NormalGenerator(jit.ScriptModule):
+         self.kernel_size = smoothing_kernel_size
+         self.std = smoothing_kernel_std
+ 
+-    @jit.script_method
+     def forward(self, depth_b1hw: Tensor, invK_b44: Tensor) -> Tensor:
+         """ 
+         First smoothes incoming depth maps with a gaussian blur, backprojects 

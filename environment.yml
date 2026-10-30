@@ -1,0 +1,16 @@
+# `monovision` env: GAN training/inference + tests. See docs/SETUP.md.
+# PyTorch is installed separately (step 3 of docs/SETUP.md) so you can pick the CUDA build that
+# matches your GPU. Tested so far: Python 3.13 + torch 2.14 (CPU). 3.11 is chosen here for broad
+# wheel availability (torch, tensorflow); not yet tested on 3.11.
+# Reconstruction uses SimpleRecon's own env: third_party/simplerecon/simplerecon_env.yml.
+name: monovision
+channels: [conda-forge]
+dependencies:
+  - python=3.11
+  - pip
+  - git
+  - pip:
+      - numpy
+      - pillow
+      - pyyaml
+      - pytest

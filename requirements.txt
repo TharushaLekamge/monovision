@@ -1,0 +1,5 @@
+# monovision.enhance (the AU-GAN port). Tested in this repo with torch 2.x on CPU.
+torch>=1.10
+numpy
+pillow
+pyyaml

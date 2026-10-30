@@ -1,0 +1,20 @@
+# Deps for the ported SimpleRecon (inference), installed into the same env as monovision.
+# Tested: Python 3.11, torch 2.14.1+cu130, torchvision 0.29.1, pytorch-lightning 2.6.6.
+# Install torch first (pytorch.org selector): an unpinned torchvision upgrades torch on its own.
+-r requirements.txt
+torchvision==0.29.1  # pairs with torch 2.14.1; change both together
+pytorch-lightning>=2,<2.7
+kornia
+timm
+trimesh
+# 0.20.0: ScalableTSDFVolume returns empty/near-empty meshes. 0.19.0 works with numpy 2.
+open3d==0.19.0
+scikit-image
+scipy
+einops
+matplotlib
+tqdm
+antialiased-cnns
+transforms3d
+moviepy>=2
+pyrender

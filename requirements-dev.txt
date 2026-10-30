@@ -1,0 +1,5 @@
+-r requirements.txt
+pytest
+# Only for tests/test_parity_tf.py and convert_tf.py (reads TF checkpoints). TF 1.14 is NOT needed.
+tensorflow-cpu>=2.10
+tf-slim
