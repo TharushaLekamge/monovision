@@ -9,7 +9,7 @@ Pipeline: `ios_logger` capture → frames → **night→day GAN** (AU-GAN / pt-A
 | Phase | Component | Status |
 |---|---|---|
 | 1 | Repo, environment, submodules | scaffolded (`scripts/00_setup.sh`, `docs/SETUP.md`, `scripts/check_env.py`) |
-| 2 | Data: BDD100K split, ScanNet, ios_logger, synthetic night | not started (`monovision/data`, `monovision/capture`) |
+| 2 | Data: BDD100K split, ScanNet, ios_logger, synthetic night | BDD100K 10k split done (`monovision.data.bdd100k`); rest not started |
 | 3 | SimpleRecon baselines + mesh evaluation | not started |
 | 4 | **AU-GAN PyTorch port + pt-AUGAN** | **done, verified against the original TF graph** (see `docs/PORTING_NOTES.md`); not yet trained |
 | 5 | Pipeline glue (`monovision run`) | not started (`monovision/recon`) |

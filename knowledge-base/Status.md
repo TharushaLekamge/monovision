@@ -7,7 +7,7 @@ updated: 2026-10-21
 | Phase | Component | State |
 |---|---|---|
 | 1 | Repo, environment, submodules | scaffolded (`scripts/00_setup.sh`, `docs/SETUP.md`, `scripts/check_env.py`) |
-| 2 | Data: BDD100K split, ScanNet, ios_logger, synthetic night | not started |
+| 2 | Data: BDD100K split, ScanNet, ios_logger, synthetic night | BDD100K **10k** split done by brightness heuristic ([[Decisions and Assumptions]]); rest not started |
 | 3 | SimpleRecon baselines + mesh evaluation | SimpleRecon **inference ported and running; training ported on branch `simplerecon-training`** ([[SimpleRecon Port]]); baselines and mesh evaluation not started |
 | 4 | AU-GAN PyTorch port + pt-AUGAN | **done and verified against the original TF graph; not yet trained** |
 | 5 | Pipeline glue (`monovision run`) | not started |

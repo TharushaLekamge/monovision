@@ -32,7 +32,8 @@ Mirrors the phases in [[Status]]. Tick items here as they land, and add a line t
 - [ ] Decide whether to pin submodule commits (`git -C third_party/<name> checkout <commit>`)
 
 ### Phase 2: Data
-- [ ] Download BDD100K and build the night/day split (`trainA/trainB/testA/testB`)
+- [x] Build the night/day split from the BDD100K 10k images (`python -m monovision.data.bdd100k`): 248 night / 6167 day train, 29 / 845 test
+- [ ] Download the full 100K images (+ labels JSON) and rebuild the split with `--labels` (real `timeofday`)
 - [ ] Request ScanNet access; fetch the 16 test scans in `data_splits/scannet16.txt`
 - [ ] Verify the `_00` suffix assumption on the 16 scan IDs
 - [ ] Build `monovision/capture`: ios_logger → frames

@@ -230,3 +230,6 @@ checkpoints/
 datasets/
 weights/
 outputs/
+
+# Local raw datasets
+raw_data/
