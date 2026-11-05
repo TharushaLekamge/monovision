@@ -22,4 +22,4 @@ Models trained with either pt-AUGAN switch cannot load the original TF checkpoin
 - BDD100K `val` becomes `test`; the unlabelled `test` folder is unused.
 - Result is small for A (248 train / 29 test night), so GAN training on it is a smoke/dev run, not a paper-scale run.
 - Output goes to `datasets/bdd100k` (gitignored); the per-image decision is in `data_splits/bdd100k_10k_split.csv` (committed).
-- With the full dataset: `python -m monovision.data.bdd100k --zip <100k zip> --labels <label jsons>` uses the real `timeofday`.
+- With the full dataset: `python -m monovision.data.bdd100k --zip raw_data/bdd100k_images_100k.zip --labels raw_data/bdd100k_labels.zip --out datasets/bdd100k_100k --manifest data_splits/bdd100k_100k_split.csv` uses the real `timeofday` (labels zip = one JSON per image). Result: train 28,028 night / 36,800 day, test 3,929 / 5,258; dawn/dusk and untagged skipped. The 100K manifest (2.4 MB) is gitignored.

@@ -3,7 +3,7 @@
     <out>/{trainA,trainB,testA,testB}/*.jpg      A = night, B = day
 
 Labels: BDD100K marks each image with attributes.timeofday ('night', 'daytime', 'dawn/dusk').
-Pass --labels <bdd100k_labels_images_{train,val}.json ...> when you have them. The 10k images
+Pass --labels <bdd100k_labels_images_{train,val}.json ... | bdd100k_labels.zip> when you have them. The 10k images
 zip ships without labels, so the fallback is a brightness heuristic on the mean luma of a small
 thumbnail; it is bimodal on the 10k set, with dawn/dusk and ambiguous frames left out.
 """
@@ -35,10 +35,21 @@ def classify_luma(luma, night_max, day_min):
 
 
 def load_timeofday(label_files):
+    """Each label file is a JSON list of items, or a zip of one JSON object per image."""
     tod = {}
+
+    def add(item):
+        tod[Path(item["name"]).stem] = item.get("attributes", {}).get("timeofday")
+
     for f in label_files:
-        for item in json.load(open(f)):
-            tod[Path(item["name"]).stem] = item.get("attributes", {}).get("timeofday")
+        if str(f).endswith(".zip"):
+            with zipfile.ZipFile(f) as z:
+                for n in z.namelist():
+                    if n.endswith(".json"):
+                        add(json.loads(z.read(n)))
+        else:
+            for item in json.load(open(f)):
+                add(item)
     return tod
 
 
@@ -76,7 +87,7 @@ def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument("--zip", default="raw_data/bdd100k_images_10k.zip")
     p.add_argument("--out", default="datasets/bdd100k")
-    p.add_argument("--labels", nargs="*", help="BDD100K label JSON files (uses timeofday instead of brightness)")
+    p.add_argument("--labels", nargs="*", help="BDD100K label JSON files or the per-image labels zip (uses timeofday instead of brightness)")
     p.add_argument("--night-max", type=float, default=50.0, help="mean luma below this is night")
     p.add_argument("--day-min", type=float, default=80.0, help="mean luma at or above this is day")
     p.add_argument("--manifest", default="data_splits/bdd100k_10k_split.csv")

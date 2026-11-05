@@ -233,3 +233,4 @@ outputs/
 
 # Local raw datasets
 raw_data/
+data_splits/bdd100k_100k_split.csv

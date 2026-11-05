@@ -39,3 +39,11 @@ def test_label_split(tmp_path):
     rows = bdd100k.build(_zip(tmp_path), tmp_path / "out", labels=[lab])
     assert {(s, i): k for s, i, k, _ in rows}[("train", "m")] == "skip"
     assert {(s, i): k for s, i, k, _ in rows}[("train", "n")] == "night"
+
+
+def test_label_zip(tmp_path):
+    lz = tmp_path / "labels.zip"
+    with zipfile.ZipFile(lz, "w") as z:
+        z.writestr("100k/train/n.json", json.dumps({"name": "n", "attributes": {"timeofday": "night"}}))
+        z.writestr("100k/train/d.json", json.dumps({"name": "d", "attributes": {"timeofday": "daytime"}}))
+    assert bdd100k.load_timeofday([lz]) == {"n": "night", "d": "daytime"}
