@@ -7,7 +7,7 @@ updated: 2026-10-21
 1. **Capture**: `ios_logger` (iOS app, built separately with Xcode) records images + poses. Code target: `monovision/capture` (not started).
 2. **Enhance**: night→day translation, `monovision.enhance.infer`. Filenames are preserved so camera poses stay aligned.
 3. **Reconstruct**: SimpleRecon predicts depth and fuses with TSDF into a mesh. Runs in its own env ([[Environment]]).
-4. **Evaluate**: FID for the GAN; precision / recall / F-score on meshes; significance tests (`monovision/eval`, not started).
+4. **Evaluate**: FID for the GAN; precision / recall / F-score on meshes; significance tests (`monovision/eval`, see [[Evaluation]]).
 
 The two envs exchange image folders on disk, so there is no cross-env import.
 

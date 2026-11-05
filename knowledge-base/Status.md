@@ -11,7 +11,7 @@ updated: 2026-10-21
 | 3 | SimpleRecon baselines + mesh evaluation | SimpleRecon **inference ported and running; training ported on branch `simplerecon-training`** ([[SimpleRecon Port]]); baselines and mesh evaluation not started |
 | 4 | AU-GAN PyTorch port + pt-AUGAN | **done and verified against the original TF graph; not yet trained** |
 | 5 | Pipeline glue (`monovision run`) | not started |
-| 6 | Evaluation (FID, P/R/F, significance) | not started |
+| 6 | Evaluation (FID, P/R/F, significance) | **code done and unit-tested** (`monovision/eval`); FID run on the GAN ([[Evaluation]]); mesh metrics not run on real meshes |
 
 ## What is verified
 - Port matches the TF graph: outputs, losses, gradients (float64), legacy bicubic. Details in [[AU-GAN Port]].

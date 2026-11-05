@@ -64,9 +64,9 @@ Mirrors the phases in [[Status]]. Tick items here as they land, and add a line t
 - [ ] Check frame filenames and camera poses stay aligned end to end
 
 ### Phase 6: Evaluation
-- [ ] FID for the GAN output
-- [ ] Mesh precision / recall / F-score
-- [ ] Significance tests
+- [x] FID for the GAN output (`monovision.eval.fid`); first numbers in [[Evaluation]]
+- [ ] Mesh precision / recall / F-score: code in `monovision.eval.mesh`, unit-tested only; run on real meshes, add gt visibility masking
+- [ ] Significance tests: code in `monovision.eval.stats`; needs per-scan results from two methods
 - [ ] Compare against the paper's reported numbers
 
 ### KB housekeeping

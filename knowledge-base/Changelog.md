@@ -5,6 +5,10 @@ tags: [log]
 
 Newest first. One line per meaningful change; link the relevant note.
 
+## 2026-11-05
+- Added `monovision/eval` (FID, mesh P/R/F, paired significance tests, CLI) with tests. First FID: 10k model 288, 100K model 188, untranslated night 114. See [[Evaluation]].
+- Built the BDD100K 100K night/day split from real `timeofday` labels and trained pt-AUGAN for 12k iterations. See [[Decisions and Assumptions]].
+
 ## 2026-10-21
 - Addressed python-pr-review: fixed moviepy call, hardened setup script (weights kept, checksum, `patch` instead of `git apply`), lighter loader, pins, 5 new tests. Patches regenerated (0005 on the training branch). See [[SimpleRecon Port]].
 - Ported SimpleRecon training to lightning 2 on worktree branch `simplerecon-training` (patch 0005); resume, fine-tune and batch 1–2 smoke runs pass. See [[SimpleRecon Port]].

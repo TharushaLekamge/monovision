@@ -13,7 +13,7 @@ Pipeline: `ios_logger` capture → frames → **night→day GAN** (AU-GAN / pt-A
 | 3 | SimpleRecon baselines + mesh evaluation | not started |
 | 4 | **AU-GAN PyTorch port + pt-AUGAN** | **done, verified against the original TF graph** (see `docs/PORTING_NOTES.md`); not yet trained |
 | 5 | Pipeline glue (`monovision run`) | not started (`monovision/recon`) |
-| 6 | Evaluation (FID, P/R/F, significance) | not started (`monovision/eval`) |
+| 6 | Evaluation (FID, P/R/F, significance) | code done, tested on synthetic data (`monovision/eval`); no real mesh results yet |
 
 ## Setup
 
@@ -61,7 +61,9 @@ python -m monovision.enhance.train --config configs/gan/augan_bdd100k.yaml --ini
 
 ```
 monovision/enhance/   AU-GAN port: layers, models, losses, data, train, infer, convert_tf
-monovision/{capture,data,recon,eval}/   later phases (placeholders)
+monovision/data/       BDD100K night/day split builder
+monovision/eval/       FID, mesh precision/recall/F-score, paired significance tests
+monovision/{capture,recon}/   later phases (placeholders)
 configs/gan/          augan_bdd100k.yaml (upstream defaults), pt_augan_bdd100k.yaml (paper)
 data_splits/          scannet16.txt — the paper's 16 test scans (_00 suffix assumed)
 tests/                test_port.py (no TF), test_parity_tf.py + tf_reference.py (vs original TF)
