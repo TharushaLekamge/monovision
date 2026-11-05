@@ -25,3 +25,18 @@ Code: `monovision/eval/`. CLI: `python -m monovision.eval {fid,mesh,compare}`. T
 - The 100K model is clearly closer to real day than the 10k model, matching what the samples look like.
 - Both are **farther** from real day than the untouched night images are. So by this metric neither model is a good translator yet; the artifacts cost more than the brightening gains. Not investigated whether the generated-image resize (native size via `keep_size`) adds to this.
 - One seed, one 500-image sample, no confidence interval.
+
+## Why is generated FID worse than untranslated night? (2026-11-05)
+Controls at 256×256, 500 vs 500 images, same Inception features:
+
+| Comparison | FID |
+|---|---|
+| real day vs real day (different 500 images): noise floor | 45–46 |
+| real day after a 256 round trip vs real day: cost of the resolution change | 48.5 (about +2) |
+| untranslated night vs real day | 110–114 |
+| 10k model output vs real day | 286 |
+| 100K model output vs real day | 183 |
+
+- It is **not** the metric setup: the noise floor is far below the gaps, and downscaling to 256 and back barely moves FID. The generated images really are farther from real day than raw night is, in Inception feature space. Visible GAN artifacts (smeared texture, blown-out sky) are the likely cause; this was not tested directly.
+- FID across the 100K run's per-epoch checkpoints (2,000 iterations per epoch, 500 images, batch 1): 330, 280, 224, 279, 226, **183**. Falling overall but noisy (the epoch 3 rise shows GAN instability), and the lowest value is at the end of the learning-rate decay. Longer training looks worthwhile, but nothing here shows it reaches the 110 of raw night.
+- Single seed, 500 images per side; differences of about 50 between neighbouring checkpoints are within the noise seen here.
