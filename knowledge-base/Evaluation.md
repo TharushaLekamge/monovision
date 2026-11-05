@@ -40,3 +40,17 @@ Controls at 256×256, 500 vs 500 images, same Inception features:
 - It is **not** the metric setup: the noise floor is far below the gaps, and downscaling to 256 and back barely moves FID. The generated images really are farther from real day than raw night is, in Inception feature space. Visible GAN artifacts (smeared texture, blown-out sky) are the likely cause; this was not tested directly.
 - FID across the 100K run's per-epoch checkpoints (2,000 iterations per epoch, 500 images, batch 1): 330, 280, 224, 279, 226, **183**. Falling overall but noisy (the epoch 3 rise shows GAN instability), and the lowest value is at the end of the learning-rate decay. Longer training looks worthwhile, but nothing here shows it reaches the 110 of raw night.
 - Single seed, 500 images per side; differences of about 50 between neighbouring checkpoints are within the noise seen here.
+
+## 128×128 vs 256×256 (2026-11-05)
+`pt_augan_bdd100k_100k_128`: batch 4 (batch 8 OOMs), 14,400 iterations (about 57,600 images, 108 min); the 256 run was 12,000 images in 155 min. FID at 128, 500 test night images vs 500 real day images resized to 128:
+
+| | FID |
+|---|---|
+| real day vs real day (floor) | 48.6 |
+| untranslated night | 119.5 |
+| 128 model per epoch (2,400 iters each) | 290, 250, 274, 175, 201, **174** |
+| 256 model final (not strictly comparable) | 183 |
+
+- FID is about the same for both (174 vs 183, inside the checkpoint-to-checkpoint noise of about 50), and 128 is also noisy epoch to epoch.
+- Visually 128 is worse on the four held-out samples: blurrier, and it invents structure (extra yellow lane lines, blobs) so the scene geometry is less faithful. That matters for reconstruction, so the longer run uses 256.
+- Cross-resolution FID compares features of upsampled 128 images with 256 ones; treat the 174 vs 183 as indicative only.
