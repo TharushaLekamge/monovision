@@ -54,3 +54,16 @@ Controls at 256×256, 500 vs 500 images, same Inception features:
 - FID is about the same for both (174 vs 183, inside the checkpoint-to-checkpoint noise of about 50), and 128 is also noisy epoch to epoch.
 - Visually 128 is worse on the four held-out samples: blurrier, and it invents structure (extra yellow lane lines, blobs) so the scene geometry is less faithful. That matters for reconstruction, so the longer run uses 256.
 - Cross-resolution FID compares features of upsampled 128 images with 256 ones; treat the 174 vs 183 as indicative only.
+
+## Long run, 256×256, 36,000 iterations (2026-11-06)
+`pt_augan_bdd100k_100k_long`: batch 1, 6 epochs of 6,000 iterations, lr decay over epochs 3–5, 7 h 40 min. FID vs real day, 500 test night images, 256×256 (floor about 45, untranslated night 110–114):
+
+| Epoch (iters) | 0 (6k) | 1 (12k) | 2 (18k) | 3 (24k) | 4 (30k) | 5 (36k, final) |
+|---|---|---|---|---|---|---|
+| FID | 259 | 264 | 146 | 154 | **138** | 209 |
+
+- Best checkpoint: `weights_epoch04.pt` (FID 138); the final `last.pt` is worse (209), so FID is not monotone in training length. The earlier 12k-iteration run scored 183.
+- Still above raw night (110–114). Longer training helped (138 vs 183) but did not close the gap.
+- Training looked unstable late: the discriminator loss fell to about 0.2–0.3 against a generator adversarial loss of about 1.4–2.2 at the end.
+- Visually (4 held-out samples) both epoch 4 and the final checkpoint put orange/red stripes on the road and dark ellipse blobs in the same places, which the 12k run did not. Scene structure is better preserved than at 10k images, but these artifacts are new. Cause not investigated.
+- One seed and 500 images; epoch-to-epoch differences of about 50 are within the noise seen so far.
